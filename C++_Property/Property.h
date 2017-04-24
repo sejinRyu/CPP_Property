@@ -17,7 +17,7 @@ public:
 	Property(ObjectClass& instance,
 		GetFunction get,
 		CopyFunction copy,
-		MoveFunction move)
+		MoveFunction move = nullptr)
 		:Instance(instance), _Get(get), _Copy(copy), _Move(move)
 	{
 
@@ -41,7 +41,9 @@ public:
 	}
 	void Set(Type&& value)
 	{
-		(Instance.*_Move)(static_cast<Type&&>(value));
+		if(_Move==nullptr)
+			(Instance.*_Copy)(value);
+		else (Instance.*_Move)(static_cast<Type&&>(value));
 	}
 
 	/*operator const Type() const
